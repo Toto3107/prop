@@ -1,0 +1,14 @@
+replicaCount: 1
+
+image:
+  repository: mayank3107/flask-k8s-demo
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 5000
+
+env:
+  FLASK_ENV: development
+  DEBUG: "true"
