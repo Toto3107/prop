@@ -8,8 +8,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    msg = os.getenv("welcome_msg","hello de")
-    return msg
+    config_value = os.getenv("CONFIG_MODE", "not set")
+    secret_value = os.getenv("API_SECRET", "no secret")
+    return f"Mode: {config_value} | Secret: {secret_value}"
 
 
 if __name__ == "__main__":

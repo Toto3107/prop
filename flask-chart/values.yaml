@@ -121,3 +121,9 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+env:
+  FLASK_ENV: development
+  DEBUG: "true"
+  CONFIG_MODE: production
+  API_SECRET: c3VwZXItc2VjcmV0LXRva2Vu
+
