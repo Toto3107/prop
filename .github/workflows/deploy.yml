@@ -1,44 +1,29 @@
-name: CI/CD Deploy to K8s
+name: CI/CD Deploy to Kind (CI Testing)
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Create kubeconfig
-      run:  |
-        echo "$KUBECONFIG" > ${{ github.workspace }}/kubeconfig
-      shell : bash  
-      env:
-        KUBECONFIG: ${{ secrets.KUBECONFIG }}
-
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v3
+    - name: Create Kubernetes cluster with Kind
+      uses: helm/kind-action@v1
       with:
-        version: 'latest'
-      env:
-        KUBECONFIG: ${{ github.workspace }}/kubeconfig
+        cluster_name: kind-ci
 
     - name: Set up Helm
       uses: azure/setup-helm@v3
-      env:
-        KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
-    - name: Helm Deploy
+    - name: Deploy with Helm
       run: |
-        helm upgrade flask-prod ./flask-chart \
-          --install \
+        helm upgrade --install flask-prod ./flask-chart \
           --namespace default \
           --create-namespace \
           --set image.tag=${{ github.sha }}
-      env:
-        KUBECONFIG: ${{ github.workspace }}/kubeconfig
